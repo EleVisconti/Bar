@@ -3,18 +3,24 @@ package it.polito.tdp.bar.model;
 import java.time.Duration;
 
 public class Event implements Comparable<Event>{
-
+//mettere sempre il compareTo per indicare l'ordine in cui vanno presi gli eventi!!
+	
+	
+	//prima cosa da creare, dobbiamo pensare a quanti possibili eventi possiamo avere
+	
+	//enum!
 	public enum EventType {
 		ARRIVO_GRUPPO_CLIENTI,
 		TAVOLO_LIBERATO
 	}
 	
+	//numero di minuti che parte da 0 e va avanti (Duration va importato da Java.time!)
 	private Duration time;
 	private EventType type;
 	private int nPersone;
 	private Duration durata;
-	private double tolleranza;
-	private Tavolo tavolo;
+	private double tolleranza; //probabilità
+	private Tavolo tavolo; //riferimento a quale tavolo assegnamo a quel gruppo
 	
 	public Event(Duration time, EventType type, int nPersone, Duration durata, double tolleranza, Tavolo tavolo) {
 		super();

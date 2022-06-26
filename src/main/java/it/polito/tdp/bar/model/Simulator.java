@@ -25,10 +25,10 @@ public class Simulator {
 	//Coda degli eventi
 	private PriorityQueue<Event> queue;
 	
-	//Statistiche
+	//Statistiche: faccio una classe Statistiche che mi ritorni tutti i valori richiesti come risultato
 	private Statistiche statistiche;
 	
-	
+	//aggiungo direttamente i tavoli nella lista
 	private void creaTavolo(int quantita, int dimensione) {
 		for (int i = 0; i < quantita; i ++)
 			this.tavoli.add(new Tavolo(dimensione,false));
@@ -39,7 +39,8 @@ public class Simulator {
 		creaTavolo(4,8);
 		creaTavolo(4,6);
 		creaTavolo(5,4);
-		
+		 
+		//creo il comparator qua dentro (se avessi usato Integer invece che int avrei già avuto il metodo implementato)
 		Collections.sort(this.tavoli, new Comparator<Tavolo>() {
 
 			@Override
@@ -53,9 +54,12 @@ public class Simulator {
 	private void creaEventi() {
 		Duration arrivo = Duration.ofMinutes(0);
 		for (int i = 0; i < this.NUM_EVENTI; i++) {
-			int nPersone = (int) (Math.random() * this.NUM_PERSONE_MAX + 1);
+			int nPersone = (int) (Math.random() * this.NUM_PERSONE_MAX + 1); //per andare a random da 0 a 10 persone
 			Duration durata = Duration.ofMinutes(this.DURATA_MIN + 
 					(int)(Math.random() * (this.DURATA_MAX - this.DURATA_MIN + 1)));
+			//es. duara min: 60, durata max: 120
+			//sta almeno 60 + o - altri 60 min
+			
 			double tolleranza = Math.random() + this.TOLLERANZA_MAX;
 			
 			Event e = new Event(arrivo, EventType.ARRIVO_GRUPPO_CLIENTI,
@@ -76,7 +80,7 @@ public class Simulator {
 		creaEventi();
 	}
 	
-	
+	 //simulazione vera e propria
 	public void run() {
 		while(!queue.isEmpty()) {
 			Event e = queue.poll();
@@ -86,7 +90,7 @@ public class Simulator {
 	
 	
 	private void processaEvento(Event e) {
-		switch (e.getType()){
+		switch (e.getType()){ //switch sulle varie tipologie di evento
 			case ARRIVO_GRUPPO_CLIENTI:
 				//conto i clienti totali
 				this.statistiche.incrementaClienti(e.getnPersone());
@@ -98,7 +102,8 @@ public class Simulator {
 					if (!t.isOccupato() && t.getPosti() >= e.getnPersone() 
 							&&
 							t.getPosti() * this.OCCUPAZIONE_MAX <= e.getnPersone()) {
-						tavolo = t;
+						//se no occuperei meno del 50% del tavolo
+						tavolo = t; //il primo che trovo è il + piccolo che va bene
 						break;
 					}
 				}
@@ -114,7 +119,7 @@ public class Simulator {
 				} else {
 					//c'è solo il bancone
 					double bancone = Math.random();
-					if(bancone <= e.getTolleranza()) {
+					if(bancone <= e.getTolleranza()) { //se il numero è <= 0.6 allora i clienti accetteranno di sedersi al bancone
 						//sì, ci fermiamo
 						System.out.format("%d persone si fermano al bancone\n", e.getnPersone());
 						statistiche.incrementaSoddisfatti(e.getnPersone());

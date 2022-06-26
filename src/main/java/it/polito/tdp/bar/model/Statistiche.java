@@ -5,6 +5,7 @@ public class Statistiche {
 	private int clientiSoddisfatti;
 	private int clientiInsoddisfatti;
 	
+	//alla creazione della classe è tutto 0
 	public Statistiche() {
 		super();
 		this.clientiTot = 0;
